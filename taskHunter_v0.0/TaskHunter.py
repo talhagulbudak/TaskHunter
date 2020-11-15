@@ -12,8 +12,16 @@ class todoTask:
         self.date = date
 
 def PrintTodoList(todoListIn):
+    print("----------------------------------------")
+    print("Following tasks will done in this sprint")
+    print("----------------------------------------")
+    printedTasks = []
     for todo in todoListIn:
-        print(todo.name, ":", todo.date)
+        if not todo.id in printedTasks:
+            taskCount = sum(t.id == todo.id for t in todoListIn)
+            print(todo.name, "-", taskCount, "times")
+            printedTasks.append(todo.id)
+    print("----------------------------------------")
 
 if __name__ == "__main__":
     print('*******************************************************')
