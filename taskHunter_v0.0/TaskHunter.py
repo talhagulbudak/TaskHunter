@@ -3,6 +3,17 @@
 
 import TaskModule
 import SprintModule
+import datetime
+
+class todoTask:
+    def __init__(self, id, name, date):
+        self.id = id
+        self.name = name
+        self.date = date
+
+def PrintTodoList(todoListIn):
+    for todo in todoListIn:
+        print(todo.name, ":", todo.date)
 
 if __name__ == "__main__":
     print('*******************************************************')
@@ -19,3 +30,22 @@ if __name__ == "__main__":
 
     sprintInfo = SprintModule.sprint(sprintFilePath)
     sprintInfo.PrintSprintInfos()
+
+    ## Create a todo list
+    todoList = []
+    for task in tasks.taskList:
+        todoDate = task.lastDate + datetime.timedelta(days=task.period)
+        while True:
+            ## don't go on if todo date later than endDate
+            if todoDate >= sprintInfo.endDate:
+                break
+            
+            ## set start date to todo date if it is early than it
+            if todoDate < sprintInfo.startDate:
+                todoDate = sprintInfo.startDate
+
+            newtodo = todoTask(task.id, task.name, todoDate)
+            todoList.append(newtodo)
+            todoDate = todoDate + datetime.timedelta(days=task.period)
+    
+    PrintTodoList(todoList)            
