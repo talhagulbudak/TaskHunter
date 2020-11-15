@@ -66,6 +66,7 @@ class tasks:
                      myTask.SetDefaultLastDate()  
 
                 self.taskList.append(myTask)
+            self.taskList.sort(key=lambda x: x.period)
     def PrintTaskList(self):
         format_row = "{:>25}" * 5
         print(format_row.format("ID","NAME","PERIOD","EFFORT","LAST DATE"))
