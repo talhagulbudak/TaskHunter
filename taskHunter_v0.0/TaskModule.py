@@ -2,14 +2,18 @@
 # This module reads tasks from a text file and stores them in an array
 # Task Format : #{TASK_NAME},{TASK_PERIOD},{TASK_EFFORT},{TASK_LAST_DONE_DATE}
 
+from enum import Enum
 import datetime
 
-minFeatureCount = 3
-nameIndex = 0
-periodIndex = 1
-effortIndex = 2
-lastDateIndex = 3
+### Enum for task info types
+class TInfos(Enum):
+    NAME        = 0
+    PERIOD      = 1
+    EFFORT      = 2
+    LASTDATE    = 3
+    MAXVALUE    = 4
 
+minFeatureCount = TInfos.MAXVALUE.value - 1
 class task:
     def __init__(self, id, name, period, effort):
         self.id = id
@@ -25,7 +29,7 @@ class task:
             print("Date format should be DD/MM/YYYY")
             self.SetDefaultLastDate()
     def SetDefaultLastDate(self):
-        self.lastDate = datetime.date.min
+        self.lastDate = datetime.datetime.min
 
 class tasks:
     def __init__(self, filePath):
@@ -50,23 +54,23 @@ class tasks:
                 
                 # set features of task
                 id += 1
-                name=taskInfos[nameIndex]
-                period=taskInfos[periodIndex]
-                effort=taskInfos[effortIndex]
+                name=taskInfos[TInfos.NAME.value]
+                period=int(taskInfos[TInfos.PERIOD.value])
+                effort=int(taskInfos[TInfos.EFFORT.value])
 
                 myTask=task(id, name, period, effort)
 
-                if len(taskInfos) > lastDateIndex :
-                    myTask.SetLastDate(taskInfos[lastDateIndex])
+                if len(taskInfos) > TInfos.LASTDATE.value :
+                    myTask.SetLastDate(taskInfos[TInfos.LASTDATE.value])
                 else :
-                     myTask.SetDefaultLastDate()   
+                     myTask.SetDefaultLastDate()  
 
                 self.taskList.append(myTask)
     def PrintTaskList(self):
         format_row = "{:>25}" * 5
         print(format_row.format("ID","NAME","PERIOD","EFFORT","LAST DATE"))
         for myTask in self.taskList :
-            print(format_row.format(myTask.id,myTask.name,myTask.period,myTask.effort,myTask.lastDate.strftime("%m/%d/%Y")))
+            print(format_row.format(myTask.id,myTask.name,myTask.period,myTask.effort,myTask.lastDate.strftime("%d/%m/%Y")))
         
 
 
@@ -81,8 +85,8 @@ def CheckTaskInfos(taskInfos) :
         return False
                 
     ## check the format of task
-    if not taskInfos[periodIndex].isnumeric() or \
-       not taskInfos[effortIndex].isnumeric() :
+    if not taskInfos[TInfos.PERIOD.value].isnumeric() or \
+       not taskInfos[TInfos.EFFORT.value].isnumeric() :
         print('Format Error at Task :')
         print(taskInfos)
         print('Task Format : TASK_NAME,TASK_PERIOD,TASK_EFFORT,[TASK_LAST_DONE_DATE](DD/MM/YYYY)')
