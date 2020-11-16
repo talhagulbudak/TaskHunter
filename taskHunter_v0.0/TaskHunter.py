@@ -5,6 +5,7 @@ import TaskModule
 import SprintModule
 import datetime
 import random
+import sys
 
 class todoTask:
     def __init__(self, id, date):
@@ -135,7 +136,11 @@ if __name__ == "__main__":
     todoList = []
     CreateTodoList(todoList, tasks)
     PrintTodoList(todoList, tasks)
-
+    userRes = ''
+    while not (userRes == 'y' or userRes == 'Y' or userRes == 'n' or userRes == 'N'):
+        userRes = input("Do you want to continue? (y/n)")
+        if userRes == 'n' or userRes == 'N':
+            sys.exit()
     people = [Person(0,"Talha",100), Person(1,"Seda",100)]
 
     todoTotalEffort = CalculateTodoEffort(todoList, tasks)
