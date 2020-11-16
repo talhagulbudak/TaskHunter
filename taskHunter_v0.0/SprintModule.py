@@ -6,6 +6,7 @@ from enum import Enum
 import time
 import datetime
 import calendar
+import sys
 
 ### Enum for sprint info types
 class SInfos(Enum):
@@ -40,7 +41,7 @@ class sprint:
             self.endDate = self.startDate + datetime.timedelta(days=days_in_month)
         else:
             print("Wrong Duration :", self.duration)
-            exit
+            sys.exit()
     ## This funstion gets sprint duration and first sprint start date form user
     ## It stores infos at self.duration and self.startDate variables
     def CreateSprintMap(self):
