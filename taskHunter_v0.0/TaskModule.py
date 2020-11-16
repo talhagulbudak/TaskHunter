@@ -72,7 +72,15 @@ class tasks:
         print(format_row.format("ID","NAME","PERIOD","EFFORT","LAST DATE"))
         for myTask in self.taskList :
             print(format_row.format(myTask.id,myTask.name,myTask.period,myTask.effort,myTask.lastDate.strftime("%d/%m/%Y")))
-        
+    ## Funtion for getting a element a variables value with id.
+    def GetElemValue(self, id, varName):
+        for t in self.taskList:
+            if t.id == id:
+                return getattr(t, varName)
+        errorMessage = varName
+        errorMessage += " couldn't be found in task list. ID : "
+        errorMessage += str(id)
+        return errorMessage
 
 
 ## check if task infos are compatible
