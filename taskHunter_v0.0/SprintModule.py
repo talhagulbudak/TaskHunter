@@ -22,6 +22,18 @@ class SDurations(Enum):
     ONEMONTH    = 3
     MAXVALUE    = 4
 
+def CalculateEndDate(startDateIn, duraionIn ):
+    if duraionIn == SDurations.ONEWEEK.value:
+        return startDateIn + datetime.timedelta(days=7)
+    elif duraionIn == SDurations.TWOWEEK.value:
+        return startDateIn + datetime.timedelta(days=14)
+    elif duraionIn == SDurations.ONEMONTH.value:
+        days_in_month = calendar.monthrange(startDateIn.year, startDateIn.month)[1]
+        return startDateIn + datetime.timedelta(days=days_in_month)
+    else:
+        print("Wrong Duration :", duraionIn)
+        sys.exit()
+
 class sprint:
     def __init__(self, filePath):
         ## Firstly read the sprint file and if it is empty or corrupted
@@ -31,17 +43,7 @@ class sprint:
             while not self.CreateSprintMap():
                 time.sleep(1)
             self.SaveSprintMap()
-
-        if self.duration == SDurations.ONEWEEK.value:
-            self.endDate = self.startDate + datetime.timedelta(days=7)
-        elif self.duration == SDurations.TWOWEEK.value:
-            self.endDate = self.startDate + datetime.timedelta(days=14)
-        elif self.duration == SDurations.ONEMONTH.value:
-            days_in_month = calendar.monthrange(self.startDate.year, self.startDate.month)[1]
-            self.endDate = self.startDate + datetime.timedelta(days=days_in_month)
-        else:
-            print("Wrong Duration :", self.duration)
-            sys.exit()
+        self.endDate = CalculateEndDate(self.startDate, self.duration)
     ## This funstion gets sprint duration and first sprint start date form user
     ## It stores infos at self.duration and self.startDate variables
     def CreateSprintMap(self):
@@ -116,6 +118,11 @@ class sprint:
 
     def PrintSprintInfos(self):
         print("DURATION\t:", SDurations(self.duration).name, "\nSTART DATE\t:", self.startDate, "\nEND DATE\t:", self.endDate)
+
+    def IncreaseSprint(self):
+        self.startDate = self.endDate
+        self.endDate = CalculateEndDate(self.startDate, self.duration)
+        self.SaveSprintMap()
 
 
 ## check if sprint infos are compatible

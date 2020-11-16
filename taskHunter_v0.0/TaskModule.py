@@ -5,6 +5,7 @@
 from enum import Enum
 import datetime
 
+taskFileHeader = "#{TASK_NAME},{TASK_PERIOD},{TASK_EFFORT},{TASK_LAST_DONE_DATE}"
 ### Enum for task info types
 class TInfos(Enum):
     NAME        = 0
@@ -81,6 +82,27 @@ class tasks:
         errorMessage += " couldn't be found in task list. ID : "
         errorMessage += str(id)
         return errorMessage
+    def GetTaskWithID(self, id):
+        for t in self.taskList:
+            if t.id == id:
+                return t
+        errorMessage += "Task couldn't be found in task list. ID : "
+        errorMessage += str(id)
+        return errorMessage
+    def SaveTasks(self, filePath):
+        f = open(filePath, "w")
+        f.write(taskFileHeader)
+        f.write('\n')
+        for t in self.taskList:
+            f.write(t.name)
+            f.write(',')
+            f.write(str(t.period))
+            f.write(',')
+            f.write(str(t.effort))
+            f.write(',')
+            f.write(t.lastDate.strftime("%d/%m/%Y"))
+            f.write('\n')
+        f.close()
 
 
 ## check if task infos are compatible

@@ -73,8 +73,7 @@ def splitEffort(totalEffortIn, peopleIn, sprintInfoIn):
         sprintEff = (totalEffortIn*cap) / peoplecapacity
         SetPersonValue(peopleIn, person.id, "spritEffort", sprintEff)
         SetPersonValue(peopleIn, person.id, "dayEffort", sprintEff / sprintDays)
-        print(GetPersonValue(peopleIn, person.id, "name") , ":", GetPersonValue(peopleIn, person.id, "spritEffort"), ":", GetPersonValue(peopleIn, person.id, "dayEffort"))
-
+        
 def PrintTodoList(todoListIn, tasksIn):
     print("----------------------------------------")
     print("Following tasks will done in this sprint")
@@ -116,6 +115,11 @@ def RandomAssigner(todoListIn, peopleIn, sprintInfoIn, tasksIn):
     for person in peopleIn:
         print(person.name,":",person.actualEffort)
 
+def UpdateLastDates(todoListIn, tasksIn):
+    for todo in todoListIn:
+        if todo.date > tasksIn.GetTaskWithID(todo.id).lastDate:
+            tasksIn.GetTaskWithID(todo.id).lastDate = todo.date
+
 if __name__ == "__main__":
     print('*******************************************************')
     print('****************Wellcome to TaskHunter.****************')
@@ -148,3 +152,15 @@ if __name__ == "__main__":
     random.shuffle(people)
 
     RandomAssigner(todoList, people, sprintInfo, tasks)
+
+    userRes = ''
+    while not (userRes == 'y' or userRes == 'Y' or userRes == 'n' or userRes == 'N'):
+        userRes = input("Do you approve this plan? If you approve it last done dates of tasks will be updated (y/n)")
+        if userRes == 'n' or userRes == 'N':
+            sys.exit()
+    
+    UpdateLastDates(todoList, tasks)
+    tasks.PrintTaskList()
+
+    tasks.SaveTasks(tasksFilePath)
+    sprintInfo.IncreaseSprint()
